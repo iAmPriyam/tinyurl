@@ -1,0 +1,16 @@
+{
+  "name": "tiny-url",
+  "version": "1.0.0",
+  "description": "url compression",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aditya Priyam",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "randomstring": "^1.2.2",
+    "sqlite3": "^5.0.2"
+  }
+}
