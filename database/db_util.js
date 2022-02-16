@@ -19,7 +19,7 @@ const initialize = () => {
   db.run(
     `CREATE TABLE IF NOT EXISTS url_list(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        hash CHAR(10),
+        hash CHAR(10) UNIQUE,
         source CHAR(256)
     )`,
     (err) => {
@@ -37,19 +37,20 @@ const initialize = () => {
   })
 }
 
-const insertNewurl = (url) => {
-  const hash = randomstring.generate({ length: 6, charset: 'hex' })
-  const db = connect()
-  db.run(
-    `INSERT INTO url_list(hash,source) VALUES("${hash}","${url}")`,
-    (err) => {
-      if (err) {
-        return console.log(err)
+const insertNewurl = (url, custom) => {
+  return new Promise((resolve, reject) => {
+    const hash = custom || randomstring.generate({ length: 6, charset: 'hex' })
+    const db = connect()
+    db.run(
+      `INSERT INTO url_list(hash,source) VALUES("${hash}","${url}")`,
+      (err) => {
+        if (err) {
+          return reject(err)
+        } else resolve(hash)
       }
-      console.log('row inserted')
-    }
-  )
-  db.close()
+    )
+    db.close()
+  })
 }
 
 const viewHash = async (hash) => {
@@ -59,7 +60,7 @@ const viewHash = async (hash) => {
     console.log(query)
     db.all(query, (error, result) => {
       if (error) {
-        reject(error)
+        return reject(error)
       }
       resolve(result)
     })
